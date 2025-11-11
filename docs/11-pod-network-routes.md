@@ -19,6 +19,8 @@ Print the internal IP address and Pod CIDR range for each worker instance:
   NODE_0_SUBNET=$(grep node-0 machines.txt | cut -d " " -f 4)
   NODE_1_IP=$(grep node-1 machines.txt | cut -d " " -f 1)
   NODE_1_SUBNET=$(grep node-1 machines.txt | cut -d " " -f 4)
+  NODE_2_IP=$(grep node-2 machines.txt | cut -d " " -f 1)
+  NODE_2_SUBNET=$(grep node-2 machines.txt | cut -d " " -f 4)
 }
 ```
 
@@ -26,18 +28,28 @@ Print the internal IP address and Pod CIDR range for each worker instance:
 ssh root@server <<EOF
   ip route add ${NODE_0_SUBNET} via ${NODE_0_IP}
   ip route add ${NODE_1_SUBNET} via ${NODE_1_IP}
+  ip route add ${NODE_2_SUBNET} via ${NODE_2_IP}
 EOF
 ```
 
 ```bash
 ssh root@node-0 <<EOF
   ip route add ${NODE_1_SUBNET} via ${NODE_1_IP}
+  ip route add ${NODE_2_SUBNET} via ${NODE_2_IP}
 EOF
 ```
 
 ```bash
 ssh root@node-1 <<EOF
   ip route add ${NODE_0_SUBNET} via ${NODE_0_IP}
+  ip route add ${NODE_2_SUBNET} via ${NODE_2_IP}
+EOF
+```
+
+```bash
+ssh root@node-2 <<EOF
+  ip route add ${NODE_0_SUBNET} via ${NODE_0_IP}
+  ip route add ${NODE_1_SUBNET} via ${NODE_1_IP}
 EOF
 ```
 
@@ -51,6 +63,7 @@ ssh root@server ip route
 default via XXX.XXX.XXX.XXX dev ens160 
 10.200.0.0/24 via XXX.XXX.XXX.XXX dev ens160 
 10.200.1.0/24 via XXX.XXX.XXX.XXX dev ens160 
+10.200.2.0/24 via XXX.XXX.XXX.XXX dev ens160 
 XXX.XXX.XXX.0/24 dev ens160 proto kernel scope link src XXX.XXX.XXX.XXX 
 ```
 
@@ -61,6 +74,7 @@ ssh root@node-0 ip route
 ```text
 default via XXX.XXX.XXX.XXX dev ens160 
 10.200.1.0/24 via XXX.XXX.XXX.XXX dev ens160 
+10.200.2.0/24 via XXX.XXX.XXX.XXX dev ens160 
 XXX.XXX.XXX.0/24 dev ens160 proto kernel scope link src XXX.XXX.XXX.XXX 
 ```
 
@@ -71,8 +85,19 @@ ssh root@node-1 ip route
 ```text
 default via XXX.XXX.XXX.XXX dev ens160 
 10.200.0.0/24 via XXX.XXX.XXX.XXX dev ens160 
+10.200.2.0/24 via XXX.XXX.XXX.XXX dev ens160 
 XXX.XXX.XXX.0/24 dev ens160 proto kernel scope link src XXX.XXX.XXX.XXX 
 ```
 
+```bash
+ssh root@node-2 ip route
+```
+
+```text
+default via XXX.XXX.XXX.XXX dev ens160 
+10.200.0.0/24 via XXX.XXX.XXX.XXX dev ens160 
+10.200.1.0/24 via XXX.XXX.XXX.XXX dev ens160 
+XXX.XXX.XXX.0/24 dev ens160 proto kernel scope link src XXX.XXX.XXX.XXX 
+```
 
 Next: [Smoke Test](12-smoke-test.md)
