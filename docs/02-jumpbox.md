@@ -46,13 +46,13 @@ pwd
 
 In this section you will download the binaries for the various Kubernetes components. The binaries will be stored in the `downloads` directory on the `jumpbox`, which will reduce the amount of internet bandwidth required to complete this tutorial as we avoid downloading the binaries multiple times for each machine in our Kubernetes cluster.
 
-The binaries that will be downloaded are listed in either the `downloads-amd64.txt` or `downloads-arm64.txt` file depending on your hardware architecture, which you can review using the `cat` command:
+The binaries that will be downloaded are listed in either the `downloads-arm64.txt` or `downloads-arm64.txt` file depending on your hardware architecture, which you can review using the `cat` command:
 
 > [!IMPORTANT]
-> Run `dpkg --print-architecture` in your target machines to check the architecture and update the commands below accordingly. In my case I am using raspberry pis so the architecture is `amd64`
+> Run `dpkg --print-architecture` in your target machines to check the architecture and update the commands below accordingly. In my case I am using raspberry pis so the architecture is `arm64`
 
 ```bash
-cat downloads-amd64.txt
+cat downloads-arm64.txt
 ```
 
 Download the binaries into a directory called `downloads` using the `wget` command:
@@ -62,7 +62,7 @@ wget -q --show-progress \
   --https-only \
   --timestamping \
   -P downloads \
-  -i downloads-amd64.txt
+  -i downloads-arm64.txt
 ```
 
 Depending on your internet connection speed it may take a while to download over `500` megabytes of binaries, and once the download is complete, you can list them using the `ls` command:
@@ -75,7 +75,7 @@ Extract the component binaries from the release archives and organize them under
 
 ```bash
 {
-  ARCH=amd64
+  ARCH=arm64
   mkdir -p downloads/{client,cni-plugins,controller,worker}
   tar -xvf downloads/crictl-v1.32.0-linux-${ARCH}.tar.gz \
     -C downloads/worker/
