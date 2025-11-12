@@ -48,8 +48,11 @@ In this section you will download the binaries for the various Kubernetes compon
 
 The binaries that will be downloaded are listed in either the `downloads-amd64.txt` or `downloads-arm64.txt` file depending on your hardware architecture, which you can review using the `cat` command:
 
+> [!IMPORTANT]
+> Run `dpkg --print-architecture` in your target machines to check the architecture and update the commands below accordingly. In my case I am using raspberry pis so the architecture is `amd64`
+
 ```bash
-cat downloads-$(dpkg --print-architecture).txt
+cat downloads-amd64.txt
 ```
 
 Download the binaries into a directory called `downloads` using the `wget` command:
@@ -59,7 +62,7 @@ wget -q --show-progress \
   --https-only \
   --timestamping \
   -P downloads \
-  -i downloads-$(dpkg --print-architecture).txt
+  -i downloads-amd64.txt
 ```
 
 Depending on your internet connection speed it may take a while to download over `500` megabytes of binaries, and once the download is complete, you can list them using the `ls` command:
@@ -72,7 +75,7 @@ Extract the component binaries from the release archives and organize them under
 
 ```bash
 {
-  ARCH=$(dpkg --print-architecture)
+  ARCH=amd64
   mkdir -p downloads/{client,cni-plugins,controller,worker}
   tar -xvf downloads/crictl-v1.32.0-linux-${ARCH}.tar.gz \
     -C downloads/worker/
