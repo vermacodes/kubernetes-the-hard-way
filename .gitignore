@@ -84,3 +84,7 @@ service-accounts.key
 
 # Ignore all downloads
 downloads/
+
+# Ignore other generated files
+10-bridge.conf
+kubelet-config.yaml

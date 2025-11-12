@@ -227,4 +227,42 @@ done < machines.txt
 
 At this point, hostnames can be used when connecting to machines from your `jumpbox` machine, or any of the three machines in the Kubernetes cluster. Instead of using IP addresses you can now connect to machines using a hostname such as `server`, `node-0`, `node-1`, or `node-2`.
 
+## Updating Cgroup Config On The Remote Machines
+
+In this section you will update the cgroup configuration on each machine to enable required kernel features for Kubernetes. This configuration is required for proper container resource management.
+
+> [!IMPORTANT]
+> This step is only needed on Raspberry Pis. The commands include a reboot to apply the kernel parameter changes.
+
+Edit the `/boot/firmware/cmdline.txt` file on each machine and add the following parameters to the existing line:
+
+```bash
+while read IP FQDN HOST SUBNET; do
+  ssh -n root@${HOST} \
+    "sed -i '$ s/$/ cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=1/' /boot/firmware/cmdline.txt"
+  ssh -n root@${HOST} reboot
+done < machines.txt
+```
+
+Your complete line in `/boot/firmware/cmdline.txt` should look something like:
+
+```text
+console=serial0,115200 console=tty1 root=PARTUUID=xxxxx rootfstype=ext4 ... cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=1
+```
+
+Wait a few moments for the machines to reboot, then verify connectivity:
+
+```bash
+for host in server node-0 node-1 node-2
+   do ssh root@${host} hostname
+done
+```
+
+```text
+server
+node-0
+node-1
+node-2
+```
+
 Next: [Provisioning a CA and Generating TLS Certificates](04-certificate-authority.md)
