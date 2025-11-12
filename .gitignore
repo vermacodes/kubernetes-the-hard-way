@@ -78,3 +78,9 @@ node-2.key
 service-accounts.crt
 service-accounts.csr
 service-accounts.key
+
+# Ignore kubeconfig files
+*.kubeconfig
+
+# Ignore all downloads
+downloads/
