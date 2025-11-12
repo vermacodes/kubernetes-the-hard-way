@@ -89,7 +89,7 @@ Extract the component binaries from the release archives and organize them under
     --strip-components 1 \
     etcd-v3.6.0-rc.3-linux-${ARCH}/etcdctl \
     etcd-v3.6.0-rc.3-linux-${ARCH}/etcd
-  mv downloads/{etcdctl,kubectl} downloads/client/
+  mv downloads/etcdctl downloads/client/
   mv downloads/{etcd,kube-apiserver,kube-controller-manager,kube-scheduler} \
     downloads/controller/
   mv downloads/{kubelet,kube-proxy} downloads/worker/
@@ -113,10 +113,27 @@ Make the binaries executable.
 
 In this section you will install the `kubectl`, the official Kubernetes client command line tool, on the `jumpbox` machine. `kubectl` will be used to interact with the Kubernetes control plane once your cluster is provisioned later in this tutorial.
 
+> [!IMPORTANT]
+> Run `dpkg --print-architecture` on the jumpbox to check the architecture and update the commands below accordingly.
+
+Download and extract the kubectl binary for the jumpbox architecture:
+
+```bash
+{
+  JUMPBOX_ARCH=$(dpkg --print-architecture)
+  wget -q --show-progress \
+    --https-only \
+    --timestamping \
+    -P downloads/client \
+    https://dl.k8s.io/release/v1.32.3/bin/linux/${JUMPBOX_ARCH}/kubectl
+}
+```
+
 Use the `chmod` command to make the `kubectl` binary executable and move it to the `/usr/local/bin/` directory:
 
 ```bash
 {
+  chmod +x downloads/client/kubectl
   cp downloads/client/kubectl /usr/local/bin/
 }
 ```
