@@ -107,7 +107,7 @@ The routes created above will not persist across reboots. To make them persisten
 Create the route configuration script on each machine:
 
 ```bash
-ssh root@server <<'EOF'
+ssh root@server <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
 ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>/dev/null || true
@@ -120,7 +120,7 @@ EOF
 ```
 
 ```bash
-ssh root@node-0 <<'EOF'
+ssh root@node-0 <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
 ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>/dev/null || true
@@ -132,7 +132,7 @@ EOF
 ```
 
 ```bash
-ssh root@node-1 <<'EOF'
+ssh root@node-1 <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
 ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>/dev/null || true
@@ -144,7 +144,7 @@ EOF
 ```
 
 ```bash
-ssh root@node-2 <<'EOF'
+ssh root@node-2 <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
 ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>/dev/null || true
