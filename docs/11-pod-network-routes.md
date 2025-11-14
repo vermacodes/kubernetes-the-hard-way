@@ -102,9 +102,9 @@ XXX.XXX.XXX.0/24 dev ens160 proto kernel scope link src XXX.XXX.XXX.XXX
 
 ## Making Routes Persistent
 
-The routes created above will not persist across reboots. To make them persistent, create a script that runs at boot via cron.
+The routes created above will not persist across reboots. To make them persistent, create a systemd service that runs after the network is ready.
 
-Create the route configuration script on each machine:
+Create the route configuration script and systemd service on each machine:
 
 ```bash
 ssh root@server <<EOF
@@ -139,7 +139,25 @@ fi
 log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
-(crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
+
+cat > /etc/systemd/system/kube-routes.service <<'SERVICE'
+[Unit]
+Description=Configure Kubernetes pod network routes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/configure-kube-routes.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+
+systemctl daemon-reload
+systemctl enable kube-routes.service
+systemctl start kube-routes.service
 EOF
 ```
 
@@ -170,7 +188,25 @@ fi
 log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
-(crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
+
+cat > /etc/systemd/system/kube-routes.service <<'SERVICE'
+[Unit]
+Description=Configure Kubernetes pod network routes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/configure-kube-routes.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+
+systemctl daemon-reload
+systemctl enable kube-routes.service
+systemctl start kube-routes.service
 EOF
 ```
 
@@ -201,7 +237,25 @@ fi
 log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
-(crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
+
+cat > /etc/systemd/system/kube-routes.service <<'SERVICE'
+[Unit]
+Description=Configure Kubernetes pod network routes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/configure-kube-routes.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+
+systemctl daemon-reload
+systemctl enable kube-routes.service
+systemctl start kube-routes.service
 EOF
 ```
 
@@ -232,30 +286,46 @@ fi
 log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
-(crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
+
+cat > /etc/systemd/system/kube-routes.service <<'SERVICE'
+[Unit]
+Description=Configure Kubernetes pod network routes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/configure-kube-routes.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+
+systemctl daemon-reload
+systemctl enable kube-routes.service
+systemctl start kube-routes.service
 EOF
 ```
 
-Verify the crontab entry was created:
+Verify the systemd service was created and started:
 
 ```bash
 for host in server node-0 node-1 node-2; do
   echo "=== ${host} ==="
-  ssh root@${host} crontab -l
+  ssh root@${host} systemctl status kube-routes.service
 done
 ```
 
-```text
-=== server ===
-@reboot /usr/local/bin/configure-kube-routes.sh
-=== node-0 ===
-@reboot /usr/local/bin/configure-kube-routes.sh
-=== node-1 ===
-@reboot /usr/local/bin/configure-kube-routes.sh
-=== node-2 ===
-@reboot /usr/local/bin/configure-kube-routes.sh
+Check the logs to ensure routes were configured successfully:
+
+```bash
+for host in server node-0 node-1 node-2; do
+  echo "=== ${host} ==="
+  ssh root@${host} cat /var/log/kube-routes.log
+done
 ```
 
-The routes will now be automatically configured on each boot.
+The routes will now be automatically configured on each boot after the network is online.
 
 Next: [Smoke Test](12-smoke-test.md)
