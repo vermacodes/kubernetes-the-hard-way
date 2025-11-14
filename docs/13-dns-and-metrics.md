@@ -38,68 +38,7 @@ helm install coredns coredns/coredns \
   --set service.clusterIP=10.0.0.10
 ```
 
-### Configure RBAC for CoreDNS
-
-Create the necessary RBAC resources:
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: coredns
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: system:coredns
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - endpoints
-  - services
-  - pods
-  - namespaces
-  verbs:
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-- apiGroups:
-  - discovery.k8s.io
-  resources:
-  - endpointslices
-  verbs:
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: system:coredns
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:coredns
-subjects:
-- kind: ServiceAccount
-  name: coredns
-  namespace: kube-system
-EOF
-```
-
-Update the CoreDNS deployment to use the correct ServiceAccount:
-
-```bash
-kubectl patch deployment coredns -n kube-system \
-  -p '{"spec":{"template":{"spec":{"serviceAccountName":"coredns"}}}}'
-```
+> Note: The Helm chart automatically creates the necessary RBAC resources (ClusterRole, ClusterRoleBinding) for CoreDNS to function properly.
 
 ### Add Node Hostnames to CoreDNS
 
@@ -198,7 +137,7 @@ helm install metrics-server metrics-server/metrics-server \
   --set args[0]="--kubelet-preferred-address-types=Hostname,InternalDNS,InternalIP"
 ```
 
-### Verification
+### Verify Metrics Server
 
 Wait for the metrics-server pod to be ready:
 
@@ -252,9 +191,9 @@ kube-system   metrics-server-5d4dcd5b6f-8xkzm   5m           18Mi
 
 If CoreDNS pods fail to start with authentication errors, ensure:
 
-1. The API server certificate includes the service ClusterIP
-2. RBAC permissions are correctly configured
-3. The correct ServiceAccount is assigned to the deployment
+1. The API server certificate includes the service ClusterIP (10.0.0.1 and 10.0.0.10)
+2. The Helm chart created RBAC resources correctly
+3. Kubelet has been configured with clusterDNS settings
 
 ### Metrics Server Connection Issues
 
@@ -271,3 +210,4 @@ kubectl logs -n kube-system deployment/metrics-server
 ```
 
 Next: [Cleaning Up](14-cleanup.md)
+
