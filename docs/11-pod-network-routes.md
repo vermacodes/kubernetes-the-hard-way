@@ -110,9 +110,33 @@ Create the route configuration script on each machine:
 ssh root@server <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
-ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>/dev/null || true
-ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>/dev/null || true
-ip route add 10.200.2.0/24 via ${NODE_2_IP} 2>/dev/null || true
+LOGFILE="/var/log/kube-routes.log"
+
+log() {
+  echo "\$(date '+%Y-%m-%d %H:%M:%S') - \$1" | tee -a \$LOGFILE
+}
+
+log "Starting Kubernetes route configuration"
+
+if ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.0.0/24 via ${NODE_0_IP}"
+else
+  log "Route already exists or failed: 10.200.0.0/24 via ${NODE_0_IP}"
+fi
+
+if ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.1.0/24 via ${NODE_1_IP}"
+else
+  log "Route already exists or failed: 10.200.1.0/24 via ${NODE_1_IP}"
+fi
+
+if ip route add 10.200.2.0/24 via ${NODE_2_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.2.0/24 via ${NODE_2_IP}"
+else
+  log "Route already exists or failed: 10.200.2.0/24 via ${NODE_2_IP}"
+fi
+
+log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
 (crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
@@ -123,8 +147,27 @@ EOF
 ssh root@node-0 <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
-ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>/dev/null || true
-ip route add 10.200.2.0/24 via ${NODE_2_IP} 2>/dev/null || true
+LOGFILE="/var/log/kube-routes.log"
+
+log() {
+  echo "\$(date '+%Y-%m-%d %H:%M:%S') - \$1" | tee -a \$LOGFILE
+}
+
+log "Starting Kubernetes route configuration"
+
+if ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.1.0/24 via ${NODE_1_IP}"
+else
+  log "Route already exists or failed: 10.200.1.0/24 via ${NODE_1_IP}"
+fi
+
+if ip route add 10.200.2.0/24 via ${NODE_2_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.2.0/24 via ${NODE_2_IP}"
+else
+  log "Route already exists or failed: 10.200.2.0/24 via ${NODE_2_IP}"
+fi
+
+log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
 (crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
@@ -135,8 +178,27 @@ EOF
 ssh root@node-1 <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
-ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>/dev/null || true
-ip route add 10.200.2.0/24 via ${NODE_2_IP} 2>/dev/null || true
+LOGFILE="/var/log/kube-routes.log"
+
+log() {
+  echo "\$(date '+%Y-%m-%d %H:%M:%S') - \$1" | tee -a \$LOGFILE
+}
+
+log "Starting Kubernetes route configuration"
+
+if ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.0.0/24 via ${NODE_0_IP}"
+else
+  log "Route already exists or failed: 10.200.0.0/24 via ${NODE_0_IP}"
+fi
+
+if ip route add 10.200.2.0/24 via ${NODE_2_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.2.0/24 via ${NODE_2_IP}"
+else
+  log "Route already exists or failed: 10.200.2.0/24 via ${NODE_2_IP}"
+fi
+
+log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
 (crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
@@ -147,8 +209,27 @@ EOF
 ssh root@node-2 <<EOF
 cat > /usr/local/bin/configure-kube-routes.sh <<'SCRIPT'
 #!/bin/bash
-ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>/dev/null || true
-ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>/dev/null || true
+LOGFILE="/var/log/kube-routes.log"
+
+log() {
+  echo "\$(date '+%Y-%m-%d %H:%M:%S') - \$1" | tee -a \$LOGFILE
+}
+
+log "Starting Kubernetes route configuration"
+
+if ip route add 10.200.0.0/24 via ${NODE_0_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.0.0/24 via ${NODE_0_IP}"
+else
+  log "Route already exists or failed: 10.200.0.0/24 via ${NODE_0_IP}"
+fi
+
+if ip route add 10.200.1.0/24 via ${NODE_1_IP} 2>&1 | tee -a \$LOGFILE; then
+  log "Added route: 10.200.1.0/24 via ${NODE_1_IP}"
+else
+  log "Route already exists or failed: 10.200.1.0/24 via ${NODE_1_IP}"
+fi
+
+log "Kubernetes route configuration completed"
 SCRIPT
 chmod +x /usr/local/bin/configure-kube-routes.sh
 (crontab -l 2>/dev/null; echo "@reboot /usr/local/bin/configure-kube-routes.sh") | crontab -
