@@ -10,6 +10,7 @@ Copy `etcd` binaries and systemd unit files to the `server` machine:
 scp \
   downloads/controller/etcd \
   downloads/client/etcdctl \
+  downloads/client/etcdutl \
   units/etcd.service \
   root@server:~/
 ```
@@ -24,11 +25,11 @@ ssh root@server
 
 ### Install the etcd Binaries
 
-Extract and install the `etcd` server and the `etcdctl` command line utility:
+Extract and install the `etcd` server, `etcdutl` and the `etcdctl` command line utility:
 
 ```bash
 {
-  mv etcd etcdctl /usr/local/bin/
+  mv etcd etcdctl etcdutl /usr/local/bin/
 }
 ```
 

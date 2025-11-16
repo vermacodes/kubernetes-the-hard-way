@@ -88,8 +88,9 @@ Extract the component binaries from the release archives and organize them under
     -C downloads/ \
     --strip-components 1 \
     etcd-v3.6.0-linux-${ARCH}/etcdctl \
+    etcd-v3.6.0-linux-${ARCH}/etcdutl \
     etcd-v3.6.0-linux-${ARCH}/etcd
-  mv downloads/{etcdctl,kubectl} downloads/client/
+  mv downloads/{etcdctl,etcdutl,kubectl} downloads/client/
   mv downloads/{etcd,kube-apiserver,kube-controller-manager,kube-scheduler} \
     downloads/controller/
   mv downloads/{kubelet,kube-proxy} downloads/worker/
