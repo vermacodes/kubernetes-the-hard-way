@@ -34,5 +34,5 @@ https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plug
 # containerd - Updated to 2.1.4 (K8s 1.33 uses containerd 2.1.x)
 https://github.com/containerd/containerd/releases/download/v2.1.4/containerd-2.1.4-linux-arm64.tar.gz
 
-# etcd - Updated to stable 3.5.21
-https://github.com/etcd-io/etcd/releases/download/v3.5.21/etcd-v3.5.21-linux-arm64.tar.gz
+# etcd - Updated to stable 3.6.0
+https://github.com/etcd-io/etcd/releases/download/v3.6.0/etcd-v3.6.0-linux-arm64.tar.gz

@@ -84,11 +84,11 @@ Extract the component binaries from the release archives and organize them under
     -C downloads/worker/
   tar -xvf downloads/cni-plugins-linux-${ARCH}-v1.7.1.tgz \
     -C downloads/cni-plugins/
-  tar -xvf downloads/etcd-v3.5.21-linux-${ARCH}.tar.gz \
+  tar -xvf downloads/etcd-v3.6.0-linux-${ARCH}.tar.gz \
     -C downloads/ \
     --strip-components 1 \
-    etcd-v3.5.21-linux-${ARCH}/etcdctl \
-    etcd-v3.5.21-linux-${ARCH}/etcd
+    etcd-v3.6.0-linux-${ARCH}/etcdctl \
+    etcd-v3.6.0-linux-${ARCH}/etcd
   mv downloads/{etcdctl,kubectl} downloads/client/
   mv downloads/{etcd,kube-apiserver,kube-controller-manager,kube-scheduler} \
     downloads/controller/
