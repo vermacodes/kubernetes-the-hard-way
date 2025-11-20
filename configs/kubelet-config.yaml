@@ -14,7 +14,7 @@ cgroupDriver: systemd
 containerRuntimeEndpoint: "unix:///var/run/containerd/containerd.sock"
 enableServer: true
 failSwapOn: false
-maxPods: 16
+maxPods: 110
 memorySwap:
   swapBehavior: NoSwap
 port: 10250
